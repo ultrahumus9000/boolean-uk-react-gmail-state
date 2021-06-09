@@ -7,10 +7,10 @@ import { useState } from 'react'
 
 function App() {
   // Use initialEmails for state
-  console.log(initialEmails)
+  // console.log(initialEmails)
 
   const [emails, setEmails] = useState(initialEmails)
-  console.log(emails)
+  // console.log(emails)
 
   const inboxEmails = emails.filter(email => {
     return email.read === false
@@ -21,7 +21,7 @@ function App() {
   })
 
   const [hideStatus, setHideStatus] = useState(false)
-  console.log(hideStatus)
+  // console.log(hideStatus)
 
   function toggleRead(singleMail) {
     let filteredEmails = emails.map(email => {
@@ -31,31 +31,74 @@ function App() {
       return email
     })
     setEmails(filteredEmails)
-    console.log(emails)
-    console.log(initialEmails)
   }
 
-  function toggleStar(singleMail) {
-    let filteredEmails = emails.map(email => {
-      if (email.title === singleMail.title) {
-        return (email = { ...email, starred: singleMail.starred })
-      }
-      return email
-    })
-    setEmails(filteredEmails)
+  let toggleStar = singleMail => {
+    const updatedEmails = emails.map(email =>
+      email.title === singleMail.title
+        ? { ...email, starred: singleMail.starred }
+        : email
+    )
+    setEmails(updatedEmails)
   }
+  const [search, setSearch] = useState('')
   const [clickStatus, setClickStatus] = useState('')
-  const emailsToRender = hideStatus
-    ? inboxEmails
-    : clickStatus === ''
-    ? emails
-    : clickStatus === 'inbox'
-    ? inboxEmails
-    : starEmails
+
+  // console.log(searchEmails)
+
+  // const emailsToRender =
+  //   search !== ''
+  //     ? searchEmails
+  //     : hideStatus
+  //     ? inboxEmails
+  //     : clickStatus === ''
+  //     ? emails
+  //     : clickStatus === 'inbox'
+  //     ? inboxEmails
+  //     : starEmails
+
+  let emailsToRender = emails
+
+  if (hideStatus === true) emailsToRender = inboxEmails
+  if (clickStatus === 'inbox') emailsToRender = inboxEmails
+  if (clickStatus === 'starred')
+    emailsToRender = emailsToRender.filter(email => {
+      return email.starred === true
+    })
+
+  if (search !== '')
+    emailsToRender = emailsToRender.filter(email => {
+      return (
+        email.title.toLowerCase().includes(search.toLowerCase()) ||
+        email.sender.toLowerCase().includes(search.toLowerCase())
+      )
+    })
 
   return (
     <div className="app">
-      <Header />
+      <header className="header">
+        <div className="left-menu">
+          <svg className="menu-icon" focusable="false" viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+          </svg>
+
+          <img
+            src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r2.png"
+            alt="gmail logo"
+          />
+        </div>
+
+        <div className="search">
+          <input
+            className="search-bar"
+            placeholder="Search mail"
+            onChange={event => {
+              console.log(event.target.value)
+              setSearch(event.target.value)
+            }}
+          />
+        </div>
+      </header>
       <nav className="left-menu">
         <ul className="inbox-list">
           <li
@@ -92,7 +135,6 @@ function App() {
               type="checkbox"
               checked={hideStatus}
               onChange={event => {
-                setClickStatus('')
                 setHideStatus(event.target.checked)
               }}
             />
@@ -112,7 +154,7 @@ function App() {
             return (
               <li
                 key={singleMail.id}
-                className={`email ${singleMail.read ? 'read' : 'unread'}`}
+                className={`email  ${singleMail.read ? 'read' : 'unread'}`}
               >
                 <input
                   type="checkbox"

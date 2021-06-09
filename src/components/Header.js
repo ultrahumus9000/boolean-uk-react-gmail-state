@@ -1,6 +1,12 @@
 import './Header.css'
+import initialEmails from '../data/emails'
+import { useState } from 'react'
 
 function Header() {
+  console.log(initialEmails)
+  const [emails, setEmails] = useState(initialEmails)
+  const [search, setSearch] = useState('')
+
   return (
     <header className="header">
       <div className="left-menu">
@@ -15,7 +21,14 @@ function Header() {
       </div>
 
       <div className="search">
-        <input className="search-bar" placeholder="Search mail" />
+        <input
+          className="search-bar"
+          placeholder="Search mail"
+          onChange={event => {
+            console.log(event.target.value)
+            setSearch(event.target.value)
+          }}
+        />
       </div>
     </header>
   )
