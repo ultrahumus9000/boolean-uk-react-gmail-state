@@ -79,16 +79,13 @@ function App() {
             <span className="label">Inbox</span>
             <span className="count">{inboxEmails.length}</span>
           </li>
-          <li
-            className="item"
-            // onClick={() => {}}
-          >
+          <li className="item" onClick={() => {}}>
             <span className="label">Starred</span>
             <span className="count">{starEmails.length}</span>
           </li>
 
           <li className="item toggle">
-            <label for="hide-read">Hide read</label>
+            <label htmlFor="hide-read">Hide read</label>
             <input
               id="hide-read"
               type="checkbox"
@@ -106,39 +103,51 @@ function App() {
           </li>
         </ul>
       </nav>
-      <main>
+      <main className="emails">
         <ul className="ul-emails">
-          {emails.map(singleMail => (
-            <li className="email ">
-              <input
-                type="checkbox"
-                className="check-box"
-                checked={singleMail.read}
-                onClick={event => {
-                  singleMail.read = event.target.checked
-                  console.log(event.target.checked)
-                  toggleRead(singleMail)
-                  getInbox()
-                  getHide()
-                }}
-              />
+          {emails.map(singleMail => {
+            // let emailClass = 'email '
 
-              <input
-                type="checkbox"
-                value={singleMail.starred}
-                className="star-checkbox"
-                checked={singleMail.starred}
-                onClick={event => {
-                  singleMail.starred = event.target.checked
-                  console.log(event.target.checked)
-                  toggleStar(singleMail)
-                  getStar()
-                }}
-              />
-              <span>{singleMail.sender}</span>
-              <span className="title">{singleMail.title}</span>
-            </li>
-          ))}
+            // if (singleMail.read) {
+            //   emailClass += 'read'
+            // } else {
+            //   emailClass += 'unread'
+            // }
+            return (
+              <li
+                key={singleMail.id}
+                className={`email ${singleMail.read ? 'read' : 'unread'}`}
+              >
+                <input
+                  type="checkbox"
+                  className="check-box"
+                  checked={singleMail.read}
+                  onChange={event => {
+                    singleMail.read = event.target.checked
+                    console.log(event.target.checked)
+                    toggleRead(singleMail)
+                    getInbox()
+                    getHide()
+                  }}
+                />
+
+                <input
+                  type="checkbox"
+                  value={singleMail.starred}
+                  className="star-checkbox"
+                  checked={singleMail.starred}
+                  onChange={event => {
+                    singleMail.starred = event.target.checked
+                    console.log(event.target.checked)
+                    toggleStar(singleMail)
+                    getStar()
+                  }}
+                />
+                <span>{singleMail.sender}</span>
+                <span className="title">{singleMail.title}</span>
+              </li>
+            )
+          })}
         </ul>
       </main>
     </div>
