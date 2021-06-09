@@ -12,28 +12,16 @@ function App() {
   const [emails, setEmails] = useState(initialEmails)
   console.log(emails)
 
-  const initialInbox = emails.filter(email => {
+  const inboxEmails = emails.filter(email => {
     return email.read === false
   })
 
-  const [inboxEmails, setInboxEmails] = useState(initialInbox)
-
-  const initialStarEmails = emails.filter(email => {
+  const starEmails = emails.filter(email => {
     return email.starred === true
   })
 
   const [hideStatus, setHideStatus] = useState(false)
   console.log(hideStatus)
-
-  function getHide() {
-    let filteredEmails = emails.filter(email => {
-      return email.read === true
-    })
-    console.log(filteredEmails)
-    return filteredEmails
-  }
-
-  const [starEmails, setStarEmails] = useState(initialStarEmails)
 
   function toggleRead(singleMail) {
     let filteredEmails = emails.map(email => {
@@ -43,7 +31,10 @@ function App() {
       return email
     })
     setEmails(filteredEmails)
+    console.log(emails)
+    console.log(initialEmails)
   }
+
   function toggleStar(singleMail) {
     let filteredEmails = emails.map(email => {
       if (email.title === singleMail.title) {
@@ -53,38 +44,40 @@ function App() {
     })
     setEmails(filteredEmails)
   }
-
-  function getInbox() {
-    let filteredEmails = emails.filter(email => {
-      return email.read === false
-    })
-    setInboxEmails(filteredEmails)
-    return filteredEmails
-  }
-
-  function getStar() {
-    let filteredEmails = emails.filter(email => {
-      return email.starred === true
-    })
-    setStarEmails(filteredEmails)
-    return filteredEmails
-  }
+  const [clickStatus, setClickStatus] = useState('')
+  const emailsToRender = hideStatus
+    ? inboxEmails
+    : clickStatus === ''
+    ? emails
+    : clickStatus === 'inbox'
+    ? inboxEmails
+    : starEmails
 
   return (
     <div className="app">
       <Header />
       <nav className="left-menu">
         <ul className="inbox-list">
-          <li className="item active" onClick={event => {}}>
+          <li
+            className={clickStatus === 'inbox' ? 'item active' : 'item'}
+            onClick={event => {
+              setClickStatus('inbox')
+            }}
+          >
             <span className="label">Inbox</span>
             <span className="count">{inboxEmails.length}</span>
           </li>
-          <li className="item" onClick={() => {}}>
+          <li
+            className={clickStatus === 'starred' ? 'item active' : 'item'}
+            onClick={() => {
+              setClickStatus('starred')
+            }}
+          >
             <span className="label">Starred</span>
             <span className="count">{starEmails.length}</span>
           </li>
 
-          <li className="item toggle">
+          <li className="item toggle active">
             <label htmlFor="hide-read">Hide read</label>
             <input
               id="hide-read"
@@ -92,12 +85,7 @@ function App() {
               checked={hideStatus}
               onChange={event => {
                 setHideStatus(event.target.checked)
-                if (event.target.checked) {
-                  let filteredEmails = getHide()
-                  setEmails(filteredEmails)
-                } else {
-                  setEmails(initialEmails)
-                }
+                setClickStatus('')
               }}
             />
           </li>
@@ -105,7 +93,7 @@ function App() {
       </nav>
       <main className="emails">
         <ul className="ul-emails">
-          {emails.map(singleMail => {
+          {emailsToRender.map(singleMail => {
             // let emailClass = 'email '
 
             // if (singleMail.read) {
@@ -123,24 +111,25 @@ function App() {
                   className="check-box"
                   checked={singleMail.read}
                   onChange={event => {
-                    singleMail.read = event.target.checked
+                    // singleMail.read = event.target.checked  this mutate the emails
+                    singleMail = { ...singleMail, read: event.target.checked }
                     console.log(event.target.checked)
                     toggleRead(singleMail)
-                    getInbox()
-                    getHide()
                   }}
                 />
 
                 <input
                   type="checkbox"
-                  value={singleMail.starred}
                   className="star-checkbox"
                   checked={singleMail.starred}
                   onChange={event => {
-                    singleMail.starred = event.target.checked
+                    // singleMail.starred = event.target.checked
+                    singleMail = {
+                      ...singleMail,
+                      starred: event.target.checked
+                    }
                     console.log(event.target.checked)
                     toggleStar(singleMail)
-                    getStar()
                   }}
                 />
                 <span>{singleMail.sender}</span>
