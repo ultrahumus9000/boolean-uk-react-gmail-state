@@ -61,7 +61,11 @@ function App() {
           <li
             className={clickStatus === 'inbox' ? 'item active' : 'item'}
             onClick={event => {
-              setClickStatus('inbox')
+              if (clickStatus === '') {
+                setClickStatus('inbox')
+              } else {
+                setClickStatus('')
+              }
             }}
           >
             <span className="label">Inbox</span>
@@ -70,7 +74,11 @@ function App() {
           <li
             className={clickStatus === 'starred' ? 'item active' : 'item'}
             onClick={() => {
-              setClickStatus('starred')
+              if (clickStatus === '') {
+                setClickStatus('starred')
+              } else {
+                setClickStatus('')
+              }
             }}
           >
             <span className="label">Starred</span>
@@ -84,8 +92,8 @@ function App() {
               type="checkbox"
               checked={hideStatus}
               onChange={event => {
-                setHideStatus(event.target.checked)
                 setClickStatus('')
+                setHideStatus(event.target.checked)
               }}
             />
           </li>
