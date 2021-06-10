@@ -26,7 +26,7 @@ function App() {
   function toggleRead(singleMail) {
     let filteredEmails = emails.map(email => {
       if (email.title === singleMail.title) {
-        return (email = { ...email, read: singleMail.read })
+        return (email = { ...email, read: !singleMail.read })
       }
       return email
     })
@@ -77,7 +77,7 @@ function App() {
   if (search !== '')
     emailsToRender = emailsToRender.filter(email => {
       return ['title', 'sender'].some(key => {
-        email[key].toLowerCase().includes(search.toLowerCase())
+        return email[key].toLowerCase().includes(search.toLowerCase())
       })
     })
 
@@ -169,7 +169,7 @@ function App() {
                   checked={singleMail.read}
                   onChange={event => {
                     // singleMail.read = event.target.checked  this mutate the emails
-                    singleMail = { ...singleMail, read: event.target.checked }
+                    // singleMail = { ...singleMail, read: event.target.checked }
                     console.log(event.target.checked)
                     toggleRead(singleMail)
                   }}
