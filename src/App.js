@@ -66,12 +66,19 @@ function App() {
       return email.starred === true
     })
 
+  // if (search !== '')
+  //   emailsToRender = emailsToRender.filter(email => {
+  //     return (
+  //       email.title.toLowerCase().includes(search.toLowerCase()) ||
+  //       email.sender.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   })
+
   if (search !== '')
     emailsToRender = emailsToRender.filter(email => {
-      return (
-        email.title.toLowerCase().includes(search.toLowerCase()) ||
-        email.sender.toLowerCase().includes(search.toLowerCase())
-      )
+      return ['title', 'sender'].some(key => {
+        email[key].toLowerCase().includes(search.toLowerCase())
+      })
     })
 
   return (
